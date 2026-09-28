@@ -1,0 +1,97 @@
+.top-menu {
+  position: relative;
+  z-index: 10;
+  background-color: #fff;
+  box-shadow: 0 4px 18px rgba(44, 60, 68, 0.08);
+
+  &__inner {
+    min-height: 74px;
+    max-width: 1600px;
+    gap: 20px 32px;
+    padding: 12px 32px;
+  }
+
+  &__brand {
+    flex-shrink: 0;
+    gap: 16px;
+    color: #72a832;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+
+    &:hover {
+      color: #568225;
+    }
+  }
+
+  &__logo {
+    width: 40px;
+    height: 48px;
+  }
+
+  &__search {
+    flex: 0 1 410px;
+    margin-left: 80px;
+  }
+
+  &__search-input {
+    border-color: #dce3e8;
+    background-color: #f0f3f5;
+    box-shadow: inset 0 1px 2px rgba(44, 60, 68, 0.08);
+
+    &::placeholder {
+      color: #2c3c44;
+      font-weight: 600;
+      opacity: 1;
+    }
+
+    &:focus {
+      border-color: #85b83e;
+      box-shadow: 0 0 0 3px rgba(133, 184, 62, 0.2);
+    }
+  }
+
+  &__datetime {
+    flex-shrink: 0;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  &__day {
+    margin-bottom: 3px;
+  }
+
+  &__clock {
+    width: 18px;
+    height: 18px;
+    color: #85b83e;
+  }
+
+  @media (max-width: 991.98px) {
+    &__search {
+      flex: 1 1 180px;
+      margin-left: 0;
+    }
+  }
+
+  @media (max-width: 575.98px) {
+    &__inner {
+      padding: 12px 16px;
+      gap: 12px;
+    }
+
+    &__search {
+      order: 3;
+      flex-basis: 100%;
+    }
+
+    &__brand {
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    &__datetime {
+      font-size: 12px;
+    }
+  }
+}
