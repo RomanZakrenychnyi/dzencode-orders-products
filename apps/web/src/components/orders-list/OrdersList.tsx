@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import type { Order, Product } from "@/types/inventory";
 import OrderDetails from "./OrderDetails";
 import { formatMoney, formatOrderDate, getOrderSummary, productCountLabel } from "@/lib/orders";
@@ -12,35 +12,20 @@ interface OrdersListProps {
 
 export default function OrdersList({ orders, products }: OrdersListProps) {
   const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
-  const [isClosing, setIsClosing] = useState(false);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const selectedOrder = orders.find((order) => order.id === selectedOrderId);
 
   function closeDetails() {
     triggerRef.current?.focus();
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setSelectedOrderId(null);
-      return;
-    }
-    setIsClosing(true);
+    setSelectedOrderId(null);
   }
-
-  useEffect(() => {
-    if (!isClosing) return;
-    // Даём CSS-переходу завершиться перед удалением содержимого панели.
-    const timeout = window.setTimeout(() => {
-      setSelectedOrderId(null);
-      setIsClosing(false);
-    }, 320);
-    return () => window.clearTimeout(timeout);
-  }, [isClosing]);
 
   if (orders.length === 0) {
     return <p className="orders-list__empty p-4">Приходов пока нет.</p>;
   }
 
   return (
-    <div className={`orders-workspace${selectedOrder && !isClosing ? " orders-workspace--expanded" : ""}`}>
+    <div className={`orders-workspace${selectedOrder ? " orders-workspace--expanded" : ""}`}>
     <ul className="orders-list list-unstyled d-flex flex-column gap-2 mb-0" aria-label="Список приходов">
       {orders.map((order) => {
         const { productCount, totals } = getOrderSummary(order.id, products);
@@ -54,11 +39,10 @@ export default function OrdersList({ orders, products }: OrdersListProps) {
                   <button
                     type="button"
                     className="orders-list__select"
-                    aria-expanded={selectedOrderId === order.id && !isClosing}
+                    aria-expanded={selectedOrderId === order.id}
                     aria-controls={selectedOrderId === order.id ? "order-details" : undefined}
                     onClick={(event) => {
                       triggerRef.current = event.currentTarget;
-                      setIsClosing(false);
                       setSelectedOrderId(order.id);
                     }}
                   >
@@ -92,7 +76,7 @@ export default function OrdersList({ orders, products }: OrdersListProps) {
         );
       })}
     </ul>
-    <div className="orders-workspace__details" inert={!selectedOrder || isClosing} aria-hidden={!selectedOrder || isClosing}>
+    <div className="orders-workspace__details" inert={!selectedOrder} aria-hidden={!selectedOrder}>
     <div className="orders-workspace__details-inner">
     {selectedOrder && (
       <OrderDetails
