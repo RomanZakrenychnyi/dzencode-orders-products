@@ -1,0 +1,80 @@
+.navigation-menu {
+  flex: 0 0 200px;
+  width: 200px;
+  padding: 48px 20px 32px;
+  background-color: #fff;
+  box-shadow: 5px 0 18px rgba(44, 60, 68, 0.08);
+
+  &__profile {
+    position: relative;
+    margin-bottom: 56px;
+  }
+
+  &__avatar {
+    width: 96px;
+    height: 96px;
+    overflow: hidden;
+    border-radius: 50%;
+  }
+
+  &__settings {
+    position: absolute;
+    right: -10px;
+    bottom: -4px;
+    display: grid;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    border-radius: 50%;
+    background-color: #fff;
+    color: #536d79;
+    box-shadow: 0 3px 10px rgba(44, 60, 68, 0.15);
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  &__item {
+    display: inline-block;
+    padding: 7px 0 4px;
+    border-bottom: 3px solid transparent;
+    color: #2c3c44;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    text-transform: uppercase;
+    text-decoration: none;
+
+    &:focus-visible {
+      outline: 2px solid #85b83e;
+      outline-offset: 4px;
+    }
+
+    &--disabled {
+      color: #74848b;
+      cursor: default;
+    }
+
+    &--active {
+      border-bottom-color: #85b83e;
+    }
+  }
+
+  @media (max-width: 767.98px) {
+    flex-basis: auto;
+    width: 100%;
+    padding: 20px 16px;
+
+    &__profile {
+      margin-bottom: 20px;
+    }
+
+    &__avatar {
+      width: 64px;
+      height: 64px;
+    }
+
+  }
+}
