@@ -1,0 +1,13 @@
+{
+  "name": "dzencode-orders-products",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": ["apps/*"],
+  "engines": { "node": ">=24 <25" },
+  "scripts": {
+    "dev": "npm run dev --workspace=@orders-products/web",
+    "build": "npm run build --workspace=@orders-products/web",
+    "start": "npm run start --workspace=@orders-products/web",
+    "typecheck": "npm run typecheck --workspace=@orders-products/web"
+  }
+}
