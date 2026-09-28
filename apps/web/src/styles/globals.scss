@@ -1,0 +1,20 @@
+$page-background: #f0f3f5;
+$text-color: #2c3c44;
+$accent-color: #85b83e;
+
+body {
+  background-color: $page-background;
+  color: $text-color;
+}
+
+.home-page {
+  &__intro {
+    background-color: #fff;
+    border-left: 4px solid $accent-color;
+    border-radius: 0.375rem;
+  }
+
+  &__title {
+    font-weight: 600;
+  }
+}
