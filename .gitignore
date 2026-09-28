@@ -1,0 +1,51 @@
+# Dependencies and package manager caches
+node_modules/
+.npm/
+.pnpm-store/
+
+# Build output and caches
+.next/
+out/
+dist/
+build/
+.turbo/
+.cache/
+*.tsbuildinfo
+next-env.d.ts
+
+# Local environment variables and secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+
+# Logs and runtime files
+logs/
+*.log
+*.pid
+*.pid.lock
+
+# Test output
+coverage/
+playwright-report/
+test-results/
+blob-report/
+
+# Local database data (keep migrations, seeds and schema models tracked)
+.data/
+mysql-data/
+
+# Local deployment settings
+.vercel/
+
+# Editor and operating system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
