@@ -44,6 +44,24 @@
 
 .orders-list {
   padding-top: 18px;
+  &__item { padding-right: 40px; }
+
+  &__delete {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: #687f8a;
+    &:hover { color: #c43141; background: #fff0f1; }
+    &:focus-visible { outline: 2px solid #85b83e; }
+  }
   &__item--selected {
     box-shadow: inset 4px 0 #85b83e;
   }
@@ -118,6 +136,20 @@
       font-size: 18px;
     }
   }
+}
+
+.delete-order-dialog {
+  width: min(760px, calc(100% - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  color: #2c3c44;
+  box-shadow: 0 16px 48px rgba(44, 60, 68, 0.2);
+  overflow-wrap: anywhere;
+  &::backdrop { background: rgba(59, 87, 100, 0.55); }
+  &__summary { border-top: 1px solid #e7ecef; }
+  &__footer { background: #85b83e; }
 }
 
 .order-details {

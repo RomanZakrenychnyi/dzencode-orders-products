@@ -3,15 +3,20 @@
 import { useRef, useState } from "react";
 import type { Order, Product } from "@/types/inventory";
 import OrderDetails from "./OrderDetails";
+import DeleteOrderDialog from "./DeleteOrderDialog";
 import { formatMoney, formatOrderDate, getOrderSummary, productCountLabel } from "@/lib/orders";
 
 interface OrdersListProps {
   orders: Order[];
   products: Product[];
+  onDelete: (id: number) => void;
 }
 
-export default function OrdersList({ orders, products }: OrdersListProps) {
+export default function OrdersList({ orders, products, onDelete }: OrdersListProps) {
   const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
+  const pendingOrder = orders.find((order) => order.id === pendingDeleteId);
+  const deleteTriggerRef = useRef<HTMLButtonElement | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const selectedOrder = orders.find((order) => order.id === selectedOrderId);
 
@@ -25,6 +30,7 @@ export default function OrdersList({ orders, products }: OrdersListProps) {
   }
 
   return (
+    <>
     <div className={`orders-workspace${selectedOrder ? " orders-workspace--expanded" : ""}`}>
     <ul className="orders-list list-unstyled d-flex flex-column gap-2 mb-0" aria-label="Список приходов">
       {orders.map((order) => {
@@ -32,7 +38,7 @@ export default function OrdersList({ orders, products }: OrdersListProps) {
         const date = formatOrderDate(order.date);
 
         return (
-          <li key={order.id} className={`orders-list__item${selectedOrderId === order.id ? " orders-list__item--selected" : ""}`}>
+          <li key={order.id} className={`orders-list__item position-relative${selectedOrderId === order.id ? " orders-list__item--selected" : ""}`}>
             <article className="row align-items-center g-3 px-3 py-3 m-0" aria-labelledby={`order-${order.id}`}>
               <div className={selectedOrder ? "col-12" : "col-12 col-xl-5"}>
                 <h2 id={`order-${order.id}`} className="orders-list__title mb-0">
@@ -72,6 +78,12 @@ export default function OrdersList({ orders, products }: OrdersListProps) {
                 <div className="orders-list__price">{formatMoney(totals.UAH)} UAH</div>
               </div>}
             </article>
+            <button type="button" className="orders-list__delete" aria-label={`Удалить приход «${order.title}»`}
+              onClick={(event) => { deleteTriggerRef.current = event.currentTarget; setPendingDeleteId(order.id); }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 10v7M14 10v7" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
           </li>
         );
       })}
@@ -89,5 +101,16 @@ export default function OrdersList({ orders, products }: OrdersListProps) {
     </div>
     </div>
     </div>
+    {pendingOrder && <DeleteOrderDialog
+      order={pendingOrder}
+      productCount={products.filter((product) => product.orderId === pendingOrder.id).length}
+      onCancel={() => { setPendingDeleteId(null); deleteTriggerRef.current?.focus(); }}
+      onConfirm={() => {
+        if (selectedOrderId === pendingOrder.id) setSelectedOrderId(null);
+        setPendingDeleteId(null);
+        onDelete(pendingOrder.id);
+      }}
+    />}
+    </>
   );
 }
