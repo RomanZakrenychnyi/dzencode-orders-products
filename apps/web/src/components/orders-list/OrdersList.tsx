@@ -9,10 +9,14 @@ import { formatMoney, formatOrderDate, getOrderSummary, productCountLabel } from
 interface OrdersListProps {
   orders: Order[];
   products: Product[];
-  onDelete: (id: number) => void;
+  onDelete: (id: number) => Promise<void>;
+  onDeleted: () => void;
 }
 
-export default function OrdersList({ orders, products, onDelete }: OrdersListProps) {
+export default function OrdersList({ orders, products, onDelete, onDeleted }: OrdersListProps) {
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const deleteLock = useRef(false);
   const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
   const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
   const pendingOrder = orders.find((order) => order.id === pendingDeleteId);
@@ -79,7 +83,7 @@ export default function OrdersList({ orders, products, onDelete }: OrdersListPro
               </div>}
             </article>
             <button type="button" className="orders-list__delete" aria-label={`Удалить приход «${order.title}»`}
-              onClick={(event) => { deleteTriggerRef.current = event.currentTarget; setPendingDeleteId(order.id); }}>
+              onClick={(event) => { deleteTriggerRef.current = event.currentTarget; setDeleteError(null); setPendingDeleteId(order.id); }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 10v7M14 10v7" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
@@ -104,11 +108,25 @@ export default function OrdersList({ orders, products, onDelete }: OrdersListPro
     {pendingOrder && <DeleteOrderDialog
       order={pendingOrder}
       productCount={products.filter((product) => product.orderId === pendingOrder.id).length}
+      isDeleting={isDeleting}
+      error={deleteError}
       onCancel={() => { setPendingDeleteId(null); deleteTriggerRef.current?.focus(); }}
-      onConfirm={() => {
-        if (selectedOrderId === pendingOrder.id) setSelectedOrderId(null);
-        setPendingDeleteId(null);
-        onDelete(pendingOrder.id);
+      onConfirm={async () => {
+        if (deleteLock.current) return;
+        deleteLock.current = true;
+        setIsDeleting(true);
+        setDeleteError(null);
+        try {
+          await onDelete(pendingOrder.id);
+          if (selectedOrderId === pendingOrder.id) setSelectedOrderId(null);
+          setPendingDeleteId(null);
+          requestAnimationFrame(onDeleted);
+        } catch {
+          setDeleteError("Не удалось подтвердить удаление. Проверьте соединение и попробуйте ещё раз.");
+        } finally {
+          deleteLock.current = false;
+          setIsDeleting(false);
+        }
       }}
     />}
     </>

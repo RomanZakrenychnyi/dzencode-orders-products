@@ -1,8 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import inventoryReducer from "./inventorySlice";
+import { inventoryApi } from "./inventoryApi";
 
 export const makeStore = () => configureStore({
-  reducer: { inventory: inventoryReducer },
+  reducer: { [inventoryApi.reducerPath]: inventoryApi.reducer },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(inventoryApi.middleware),
 });
 
 export type AppStore = ReturnType<typeof makeStore>;
