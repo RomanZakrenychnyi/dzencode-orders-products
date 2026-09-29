@@ -1,5 +1,6 @@
 import Link from "next/link";
 import HeaderClock from "./HeaderClock";
+import SessionCounter from "./SessionCounter";
 
 export default function TopMenu() {
   return (
@@ -22,6 +23,7 @@ export default function TopMenu() {
         </div>
 
         <HeaderClock />
+        <SessionCounter />
       </div>
     </header>
   );

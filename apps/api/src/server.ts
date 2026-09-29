@@ -1,4 +1,6 @@
+import { createServer } from "node:http";
 import { app } from "./app.js";
+import { attachRealtime } from "./realtime.js";
 
 const port = Number(process.env.PORT ?? 4000);
 
@@ -6,7 +8,10 @@ if (!Number.isInteger(port) || port < 1 || port > 65535) {
   throw new Error("PORT должен быть целым числом от 1 до 65535");
 }
 
-const server = app.listen(port, () => {
+const server = createServer(app);
+const io = attachRealtime(server);
+
+server.listen(port, () => {
   console.log(`API запущен: http://localhost:${port}`);
 });
 
@@ -16,7 +21,7 @@ server.on("error", (error) => {
 });
 
 function shutdown() {
-  server.close((error) => {
+  io.close((error) => {
     if (error) {
       console.error("Ошибка остановки API:", error.message);
       process.exitCode = 1;

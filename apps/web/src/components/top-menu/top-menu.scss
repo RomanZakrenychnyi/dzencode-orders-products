@@ -61,6 +61,26 @@
     margin-bottom: 3px;
   }
 
+  &__sessions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  &__session-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #85b83e;
+
+    &--offline {
+      background-color: #89969e;
+    }
+  }
+
   &__clock {
     width: 18px;
     height: 18px;
