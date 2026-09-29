@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HeaderClock from "./HeaderClock";
 
 export default function TopMenu() {
   return (
@@ -20,20 +21,7 @@ export default function TopMenu() {
           <input id="inventory-search" type="search" className="top-menu__search-input form-control form-control-sm" placeholder="Поиск" />
         </div>
 
-        {/* Временные значения для вёрстки; живые часы добавим отдельным этапом. */}
-        <div className="top-menu__datetime ms-auto">
-          <div className="top-menu__day">Понедельник</div>
-          <div className="d-flex align-items-center gap-3">
-            <time dateTime="2026-09-28">28 Сен, 2026</time>
-            <span className="d-inline-flex align-items-center gap-2">
-              <svg className="top-menu__clock" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <circle cx="10" cy="10" r="7" stroke="currentColor" strokeWidth="2" />
-                <path d="M10 5v5H7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <time dateTime="17:20">17:20</time>
-            </span>
-          </div>
-        </div>
+        <HeaderClock />
       </div>
     </header>
   );
