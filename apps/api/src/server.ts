@@ -1,6 +1,7 @@
 import { createServer } from "node:http";
 import { app } from "./app.js";
 import { attachRealtime } from "./realtime.js";
+import { pool } from "./database.js";
 
 const port = Number(process.env.PORT ?? 4000);
 
@@ -21,9 +22,15 @@ server.on("error", (error) => {
 });
 
 function shutdown() {
-  io.close((error) => {
+  io.close(async (error) => {
     if (error) {
       console.error("Ошибка остановки API:", error.message);
+      process.exitCode = 1;
+    }
+    try {
+      await pool.end();
+    } catch {
+      console.error("Не удалось закрыть соединения MySQL");
       process.exitCode = 1;
     }
   });

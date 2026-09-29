@@ -5,6 +5,10 @@
   "workspaces": ["apps/*"],
   "engines": { "node": ">=24 <25" },
   "scripts": {
+    "db:up": "docker compose up -d --wait db",
+    "db:stop": "docker compose stop db",
+    "db:status": "docker compose ps",
+    "db:logs": "docker compose logs --tail=100 db",
     "dev": "npm run dev --workspace=@orders-products/web",
     "dev:api": "npm run dev --workspace=@orders-products/api",
     "build:api": "npm run build --workspace=@orders-products/api",
