@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
+import { authRouter, requireAuth, checkOrigin } from "./auth.js";
 import type { ErrorRequestHandler } from "express";
 import { pool } from "./database.js";
 import { getOrders, getProducts } from "./inventory.js";
@@ -8,8 +10,14 @@ import type { ResultSetHeader } from "mysql2";
 export const app = express();
 
 app.disable("x-powered-by");
-app.use(cors({ origin: process.env.CLIENT_ORIGIN ?? "http://localhost:3000" }));
+app.use(cors({ origin: process.env.CLIENT_ORIGIN ?? "http://localhost:3000", credentials: true }));
 app.use(express.json({ limit: "100kb" }));
+app.use(cookieParser());
+app.use(checkOrigin);
+app.use("/auth", authRouter);
+app.use(["/orders", "/products"], requireAuth, (_request, response, next) => {
+  response.set("Cache-Control", "no-store"); next();
+});
 
 app.get("/health", (_request, response) => {
   response.json({ status: "ok", service: "orders-products-api" });

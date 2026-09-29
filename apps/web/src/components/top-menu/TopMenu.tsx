@@ -1,6 +1,7 @@
 import Link from "next/link";
 import HeaderClock from "./HeaderClock";
 import SessionCounter from "./SessionCounter";
+import LogoutButton from "@/components/auth/LogoutButton";
 
 export default function TopMenu() {
   return (
@@ -24,6 +25,7 @@ export default function TopMenu() {
 
         <HeaderClock />
         <SessionCounter />
+        <LogoutButton />
       </div>
     </header>
   );

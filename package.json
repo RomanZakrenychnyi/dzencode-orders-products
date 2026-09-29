@@ -5,6 +5,8 @@
   "workspaces": ["apps/*"],
   "engines": { "node": ">=24 <25" },
   "scripts": {
+    "setup:auth": "npm run setup:auth --workspace=@orders-products/api",
+    "test:auth": "npm run test:auth --workspace=@orders-products/api",
     "db:up": "docker compose up -d --wait db",
     "db:stop": "docker compose stop db",
     "db:status": "docker compose ps",
