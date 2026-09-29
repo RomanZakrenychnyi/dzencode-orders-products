@@ -1,0 +1,56 @@
+.products-filter {
+  width: min(100%, 300px);
+  &__label { color: #687f8a; font-size: 14px; }
+}
+
+.products-list {
+  margin-top: 48px;
+  overflow-y: hidden;
+
+  &:focus-visible { outline: 2px solid #85b83e; outline-offset: 4px; }
+
+  &__table {
+    min-width: 1120px;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    --bs-table-color: #536d79;
+
+    thead th {
+      border: 0;
+      background: transparent;
+      color: #687f8a;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    tbody th, tbody td {
+      padding: 16px;
+      border-top: 1px solid #cfd8de;
+      border-bottom: 1px solid #cfd8de;
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    tbody th:first-child {
+      min-width: 280px;
+      border-left: 1px solid #cfd8de;
+      border-radius: 5px 0 0 5px;
+    }
+
+    tbody td:last-child {
+      border-right: 1px solid #cfd8de;
+      border-radius: 0 5px 5px 0;
+    }
+  }
+
+  &__icon { flex-shrink: 0; color: #687f8a; }
+  &__name { color: #2c3c44; }
+  &__secondary { color: #687f8a; font-size: 12px; font-weight: 400; }
+  &__order { min-width: 240px; max-width: 360px; overflow-wrap: anywhere; }
+  &__price { font-size: 14px; }
+  &__empty { margin-top: 48px; border: 1px solid #cfd8de; border-radius: 5px; background: #fff; }
+
+  @media (max-width: 767.98px) {
+    margin-top: 24px;
+  }
+}
