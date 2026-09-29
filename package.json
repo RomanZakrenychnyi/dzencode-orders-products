@@ -6,6 +6,10 @@
   "engines": { "node": ">=24 <25" },
   "scripts": {
     "dev": "npm run dev --workspace=@orders-products/web",
+    "dev:api": "npm run dev --workspace=@orders-products/api",
+    "build:api": "npm run build --workspace=@orders-products/api",
+    "start:api": "npm run start --workspace=@orders-products/api",
+    "typecheck:api": "npm run typecheck --workspace=@orders-products/api",
     "build": "npm run build --workspace=@orders-products/web",
     "start": "npm run start --workspace=@orders-products/web",
     "typecheck": "npm run typecheck --workspace=@orders-products/web"
