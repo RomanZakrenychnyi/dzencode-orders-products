@@ -2,6 +2,7 @@
 @use "../components/navigation-menu/navigation-menu";
 @use "../components/orders-list/orders-list";
 @use "../components/products-list/products-list";
+@use "../components/auth/auth";
 
 $page-background: #f0f3f5;
 $text-color: #2c3c44;

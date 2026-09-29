@@ -4,12 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "setup:auth": "node --env-file=.env --import tsx src/setup-auth.ts",
+    "test:auth": "npm run build && node --env-file=.env --test tests/auth.test.mjs",
     "dev": "node --env-file-if-exists=.env --import tsx --watch src/server.ts",
     "build": "tsc",
     "start": "node --env-file-if-exists=.env dist/server.js",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^24.19.0",
@@ -17,9 +20,13 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0",
+    "jose": "^6.2.12",
     "mysql2": "^3.24.4",
-    "socket.io": "^4.8.4"
+    "socket.io": "^4.8.4",
+    "zod": "^4.6.5"
   }
 }

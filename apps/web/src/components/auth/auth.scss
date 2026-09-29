@@ -1,0 +1,11 @@
+.login-page {
+  min-height: 100vh;
+  &__card { width: 100%; max-width: 460px; }
+  &__brand { color: #679c2c; letter-spacing: 0.08em; }
+  &__submit {
+    background-color: #679c2c;
+    color: #fff;
+    &:hover, &:focus-visible { background-color: #507c20; color: #fff; }
+    &:disabled { background-color: #679c2c; color: #fff; opacity: 0.65; }
+  }
+}
