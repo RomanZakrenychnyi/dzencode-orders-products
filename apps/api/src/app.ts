@@ -1,11 +1,14 @@
 import express from "express";
+import cors from "cors";
 import type { ErrorRequestHandler } from "express";
 import { pool } from "./database.js";
 import { getOrders, getProducts } from "./inventory.js";
+import type { ResultSetHeader } from "mysql2";
 
 export const app = express();
 
 app.disable("x-powered-by");
+app.use(cors({ origin: process.env.CLIENT_ORIGIN ?? "http://localhost:3000" }));
 app.use(express.json({ limit: "100kb" }));
 
 app.get("/health", (_request, response) => {
@@ -27,6 +30,18 @@ app.get("/orders", async (_request, response) => {
 
 app.get("/products", async (_request, response) => {
   response.json(await getProducts());
+});
+
+app.delete("/orders/:id", async (request, response) => {
+  const id = Number(request.params.id);
+  if (!/^[1-9]\d*$/.test(request.params.id) || !Number.isSafeInteger(id) || id > 4294967295) {
+    response.status(400).json({ error: "Некорректный идентификатор прихода" });
+    return;
+  }
+  // Один DELETE атомарно удаляет приход и связанные записи через внешние ключи.
+  await pool.execute<ResultSetHeader>("DELETE FROM orders WHERE id = ?", [id]);
+  // Повторный запрос тоже успешен: нужное состояние (приход отсутствует) достигнуто.
+  response.status(204).end();
 });
 
 app.use((_request, response) => {
