@@ -1,0 +1,35 @@
+.orders-chart {
+  background: #fff;
+  border: 1px solid #dce3e8;
+  border-radius: 6px;
+
+  &__row {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr) minmax(130px, 1fr);
+    align-items: center;
+    gap: 16px;
+  }
+
+  &__label {
+    font-size: 13px;
+    overflow-wrap: anywhere;
+  }
+
+  &__bar {
+    display: block;
+    width: 100%;
+    height: 20px;
+  }
+
+  &__value {
+    font-size: 13px;
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (max-width: 767.98px) {
+    &__row { grid-template-columns: minmax(0, 1fr) auto; gap: 8px 12px; }
+    &__label { grid-column: 1 / -1; }
+  }
+}

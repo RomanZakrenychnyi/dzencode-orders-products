@@ -8,6 +8,7 @@ import { useInventory } from "@/store/useInventory";
 import InventoryRequestState from "@/components/InventoryRequestState";
 import { inventoryApi, useDeleteOrderMutation } from "@/store/inventoryApi";
 import OrdersList from "./OrdersList";
+import OrdersChart from "@/components/orders-chart/OrdersChart";
 
 export default function OrdersView() {
   const { ui } = useLocale();
@@ -25,6 +26,7 @@ export default function OrdersView() {
         dispatch(inventoryApi.util.updateQueryData("getOrders", undefined, data => data.filter(order => order.id !== id)));
         dispatch(inventoryApi.util.updateQueryData("getProducts", undefined, data => data.filter(product => product.orderId !== id)));
       }} onDeleted={() => headingRef.current?.focus()} />}
+      {!isLoading && !isError && <OrdersChart orders={orders} products={products} />}
     </main>
   );
 }
