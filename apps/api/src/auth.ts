@@ -13,8 +13,14 @@ const key = new TextEncoder().encode(secret);
 const issuer = "orders-products-api";
 const audience = "orders-products-web";
 const cookieName = "orders_session";
+const secureSetting = process.env.COOKIE_SECURE;
+if (secureSetting !== undefined && !["true", "false"].includes(secureSetting)) {
+  throw new Error("COOKIE_SECURE должен быть true или false");
+}
 const cookieOptions: CookieOptions = {
-  httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/",
+  httpOnly: true, sameSite: "lax",
+  secure: secureSetting === undefined ? process.env.NODE_ENV === "production" : secureSetting === "true",
+  path: "/",
 };
 interface UserRow extends RowDataPacket { id: number; email: string; name: string; password_hash: string }
 const dummyHash = hashPassword(randomUUID());
