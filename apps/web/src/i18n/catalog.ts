@@ -14,5 +14,5 @@ const ukrainianTitles: Record<string, string> = {
 };
 
 export function catalogTitle(title: string, locale: Locale) {
-  return locale === "uk" ? ukrainianTitles[title] ?? title : title;
+  return locale === "uk" && Object.hasOwn(ukrainianTitles, title) ? ukrainianTitles[title] : title;
 }
