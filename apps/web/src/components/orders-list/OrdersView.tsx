@@ -9,6 +9,7 @@ import InventoryRequestState from "@/components/InventoryRequestState";
 import { inventoryApi, useDeleteOrderMutation } from "@/store/inventoryApi";
 import OrdersList from "./OrdersList";
 import OrdersChart from "@/components/orders-chart/OrdersChart";
+import MapSection from "@/components/map/MapSection";
 
 export default function OrdersView() {
   const { ui } = useLocale();
@@ -27,6 +28,7 @@ export default function OrdersView() {
         dispatch(inventoryApi.util.updateQueryData("getProducts", undefined, data => data.filter(product => product.orderId !== id)));
       }} onDeleted={() => headingRef.current?.focus()} />}
       {!isLoading && !isError && <OrdersChart orders={orders} products={products} />}
+      <MapSection />
     </main>
   );
 }
