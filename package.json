@@ -6,6 +6,7 @@
   "engines": { "node": ">=24 <25" },
   "scripts": {
     "setup:auth": "npm run setup:auth --workspace=@orders-products/api",
+    "test:ssr": "npm run build && node --test apps/web/tests/ssr.test.mjs",
     "test:auth": "npm run test:auth --workspace=@orders-products/api",
     "db:up": "docker compose up -d --wait db",
     "db:stop": "docker compose stop db",
