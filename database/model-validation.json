@@ -1,0 +1,479 @@
+{
+  "workbench": "8.0.47",
+  "reopened": true,
+  "tables": [
+    {
+      "table": "orders",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT",
+          "notNull": 1,
+          "autoIncrement": 1,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "title",
+          "type": "VARCHAR(255)",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "description",
+          "type": "TEXT",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        }
+      ],
+      "indices": [
+        {
+          "name": "PRIMARY",
+          "primary": 1,
+          "unique": 0,
+          "columns": [
+            "id"
+          ]
+        },
+        {
+          "name": "idx_orders_created_at",
+          "primary": 0,
+          "unique": 0,
+          "columns": [
+            "created_at"
+          ]
+        }
+      ],
+      "foreignKeys": []
+    },
+    {
+      "table": "product_types",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT",
+          "notNull": 1,
+          "autoIncrement": 1,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(100)",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        }
+      ],
+      "indices": [
+        {
+          "name": "PRIMARY",
+          "primary": 1,
+          "unique": 0,
+          "columns": [
+            "id"
+          ]
+        },
+        {
+          "name": "uq_product_types_name",
+          "primary": 0,
+          "unique": 1,
+          "columns": [
+            "name"
+          ]
+        }
+      ],
+      "foreignKeys": []
+    },
+    {
+      "table": "products",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT",
+          "notNull": 1,
+          "autoIncrement": 1,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "order_id",
+          "type": "INT",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "type_id",
+          "type": "INT",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "title",
+          "type": "VARCHAR(255)",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "serial_number",
+          "type": "VARCHAR(100)",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "is_new",
+          "type": "BOOLEAN",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "photo",
+          "type": "VARCHAR(2048)",
+          "notNull": 0,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "specification",
+          "type": "TEXT",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "guarantee_start",
+          "type": "DATE",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "guarantee_end",
+          "type": "DATE",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        }
+      ],
+      "indices": [
+        {
+          "name": "PRIMARY",
+          "primary": 1,
+          "unique": 0,
+          "columns": [
+            "id"
+          ]
+        },
+        {
+          "name": "idx_products_order_id",
+          "primary": 0,
+          "unique": 0,
+          "columns": [
+            "order_id"
+          ]
+        },
+        {
+          "name": "idx_products_type_id",
+          "primary": 0,
+          "unique": 0,
+          "columns": [
+            "type_id"
+          ]
+        }
+      ],
+      "foreignKeys": [
+        {
+          "name": "fk_products_order",
+          "columns": [
+            "order_id"
+          ],
+          "target": "orders",
+          "targetColumns": [
+            "id"
+          ],
+          "delete": "CASCADE"
+        },
+        {
+          "name": "fk_products_type",
+          "columns": [
+            "type_id"
+          ],
+          "target": "product_types",
+          "targetColumns": [
+            "id"
+          ],
+          "delete": "RESTRICT"
+        }
+      ]
+    },
+    {
+      "table": "users",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT",
+          "notNull": 1,
+          "autoIncrement": 1,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(254)",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(100)",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "password_hash",
+          "type": "VARCHAR(255)",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        }
+      ],
+      "indices": [
+        {
+          "name": "PRIMARY",
+          "primary": 1,
+          "unique": 0,
+          "columns": [
+            "id"
+          ]
+        },
+        {
+          "name": "uq_users_email",
+          "primary": 0,
+          "unique": 1,
+          "columns": [
+            "email"
+          ]
+        }
+      ],
+      "foreignKeys": []
+    },
+    {
+      "table": "auth_sessions",
+      "columns": [
+        {
+          "name": "id",
+          "type": "CHAR(36)",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "user_id",
+          "type": "INT",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "expires_at",
+          "type": "DATETIME",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        }
+      ],
+      "indices": [
+        {
+          "name": "PRIMARY",
+          "primary": 1,
+          "unique": 0,
+          "columns": [
+            "id"
+          ]
+        },
+        {
+          "name": "idx_auth_sessions_expiry",
+          "primary": 0,
+          "unique": 0,
+          "columns": [
+            "expires_at"
+          ]
+        },
+        {
+          "name": "fk_auth_sessions_user",
+          "primary": 0,
+          "unique": 0,
+          "columns": [
+            "user_id"
+          ]
+        }
+      ],
+      "foreignKeys": [
+        {
+          "name": "fk_auth_sessions_user",
+          "columns": [
+            "user_id"
+          ],
+          "target": "users",
+          "targetColumns": [
+            "id"
+          ],
+          "delete": "CASCADE"
+        }
+      ]
+    },
+    {
+      "table": "product_prices",
+      "columns": [
+        {
+          "name": "product_id",
+          "type": "INT",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "currency",
+          "type": "CHAR(3)",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "amount_minor",
+          "type": "INT",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "is_default",
+          "type": "BOOLEAN",
+          "notNull": 1,
+          "autoIncrement": 0,
+          "generated": 0,
+          "expression": "",
+          "storage": ""
+        },
+        {
+          "name": "default_slot",
+          "type": "TINYINT",
+          "notNull": 0,
+          "autoIncrement": 0,
+          "generated": 1,
+          "expression": "CASE WHEN is_default = 1 THEN 1 ELSE NULL END",
+          "storage": "VIRTUAL"
+        }
+      ],
+      "indices": [
+        {
+          "name": "PRIMARY",
+          "primary": 1,
+          "unique": 0,
+          "columns": [
+            "product_id",
+            "currency"
+          ]
+        },
+        {
+          "name": "uq_product_prices_default",
+          "primary": 0,
+          "unique": 1,
+          "columns": [
+            "product_id",
+            "default_slot"
+          ]
+        }
+      ],
+      "foreignKeys": [
+        {
+          "name": "fk_product_prices_product",
+          "columns": [
+            "product_id"
+          ],
+          "target": "products",
+          "targetColumns": [
+            "id"
+          ],
+          "delete": "CASCADE"
+        }
+      ]
+    }
+  ],
+  "diagramTables": 6,
+  "diagramConnections": 4,
+  "checkConstraints": "See schema.sql; preserved as table comments, not native table CHECK objects in Workbench 8."
+}
