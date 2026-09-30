@@ -7,6 +7,7 @@ erDiagram
     orders ||--o{ products : contains
     product_types ||--o{ products : classifies
     products ||--o{ product_prices : has
+    users ||--o{ auth_sessions : authenticates
 ```
 
 | Таблица | Назначение |
@@ -15,6 +16,8 @@ erDiagram
 | `product_types` | Справочник типов: мониторы, накопители, клавиатуры. |
 | `products` | Товары с обязательными ссылками на приход и тип, серийным номером, состоянием и гарантией. |
 | `product_prices` | Цена товара отдельно в каждой валюте и признак основной цены. |
+| `users` | Пользователь, уникальный email и хеш пароля. Открытые пароли не хранятся. |
+| `auth_sessions` | Сессии пользователя: UUID, ссылка на пользователя и срок действия в UTC. |
 
 ## Правила хранения
 
@@ -44,12 +47,22 @@ erDiagram
 
 ## MySQL Workbench
 
-1. Создайте модель через **File → New Model**.
-2. Выберите **File → Import → Reverse Engineer MySQL Create Script** и укажите `database/schema.sql`.
-3. Включите размещение импортированных объектов на диаграмме (**Place imported objects on a diagram**), если мастер предлагает этот пункт.
-4. Проверьте шесть таблиц и четыре связи (включая пользователей и сессии авторизации). Сохраните модель как `orders-products.mwb`.
+Готовая модель: [orders-products.mwb](orders-products.mwb). Откройте её в **MySQL Workbench 8.0** через **File → Open Model**, затем откройте диаграмму **Orders, products and authentication**. Модель содержит шесть таблиц и четыре связи; подключение к серверу для просмотра не требуется.
 
-Это SQL-источник схемы, а не готовый `.mwb`-файл. Импорт в установленном Workbench пока не проверен. Официальная инструкция: https://dev.mysql.com/doc/workbench/en/wb-reverse-engineer-create-script.html
+Модель создана и повторно открыта в Workbench 8.0.47. Проверены 29 колонок, первичные и уникальные ключи, четыре внешних ключа и виртуальное поле `default_slot`. Результат проверки структуры сохранён в [model-validation.json](model-validation.json).
+
+Workbench 8 не представляет табличные `CHECK` отдельными объектами модели. Их условия сохранены в комментариях таблиц `products` и `product_prices`. Для создания БД используйте **schema.sql**, как это делает Docker Compose: он содержит полный набор ограничений. Вычисляемая колонка `default_slot` сохранена в модели как `VIRTUAL` с исходным выражением.
+
+| Дочерняя таблица / поле | Родительская таблица / поле | При удалении родителя |
+| --- | --- | --- |
+| `products.order_id` | `orders.id` | CASCADE |
+| `products.type_id` | `product_types.id` | RESTRICT |
+| `product_prices.product_id` | `products.id` | CASCADE |
+| `auth_sessions.user_id` | `users.id` | CASCADE |
+
+30.09.2026 структура работающей Docker-БД сверена через `information_schema`: присутствуют шесть таблиц, 29 колонок, четыре внешних ключа с указанными правилами удаления и виртуальная колонка `default_slot`. Проверка была только на чтение, записи не изменялись. Файл модели дополнительно проверен повторным открытием в Workbench 8.0.47.
+
+Официальная инструкция по импорту SQL: https://dev.mysql.com/doc/workbench/en/wb-reverse-engineer-create-script.html
 
 Для создания реальной БД откройте скрипт в SQL Editor подключённого MySQL и выполните его. Он создаёт БД `orders_products` и таблицы без удаления существующих данных. Это первоначальный скрипт, не повторяемая миграция: повторный запуск остановится на уже существующих таблицах. Не запускайте его в рабочей БД с данными; для дальнейших изменений будут отдельные миграции.
 
