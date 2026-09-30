@@ -5,6 +5,8 @@
   "workspaces": ["apps/*"],
   "engines": { "node": ">=24 <25" },
   "scripts": {
+    "test": "npm run test:unit",
+    "test:unit": "node --experimental-strip-types --test apps/web/tests/unit/*.test.mjs",
     "setup:auth": "npm run setup:auth --workspace=@orders-products/api",
     "test:ssr": "npm run build && node --test apps/web/tests/ssr.test.mjs",
     "test:auth": "npm run test:auth --workspace=@orders-products/api",
