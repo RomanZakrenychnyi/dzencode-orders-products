@@ -1,3 +1,8 @@
+"use client";
+
+import { productTypeLabel } from "@/i18n/productTypes";
+import { useLocale } from "@/i18n/LocaleProvider";
+
 import type { Order, Product } from "@/types/inventory";
 import { formatMoney, formatOrderDate } from "@/lib/orders";
 
@@ -8,35 +13,37 @@ interface ProductsListProps {
 }
 
 function GuaranteeDate({ value }: { value: string }) {
+  const { locale } = useLocale();
   const [year, month, day] = value.split("-");
   return (
     <time dateTime={value}>
       <span className="d-block">{day} / {month} / {year}</span>
-      <span className="products-list__secondary d-block">{formatOrderDate(value).long}</span>
+      <span className="products-list__secondary d-block">{formatOrderDate(value, locale).long}</span>
     </time>
   );
 }
 
 export default function ProductsList({ products, orders, filtered }: ProductsListProps) {
+  const { ui, locale } = useLocale();
   const ordersById = new Map(orders.map((order) => [order.id, order]));
 
   if (products.length === 0) {
-    return <p className="products-list__empty p-4">{filtered ? "Товары выбранного типа не найдены." : "Товаров пока нет."}</p>;
+    return <p className="products-list__empty p-4">{filtered ? ui.noMatches : ui.emptyProducts}</p>;
   }
 
   return (
-    <div className="products-list table-responsive" role="region" aria-label="Список продуктов" tabIndex={0}>
+    <div className="products-list table-responsive" role="region" aria-label={ui.productList} tabIndex={0}>
       <table className="products-list__table table align-middle mb-0">
-        <caption className="visually-hidden">Товары, гарантия, цены и связанные приходы</caption>
+        <caption className="visually-hidden">{ui.caption}</caption>
         <thead>
           <tr>
-            <th scope="col">Продукт</th>
-            <th scope="col">Тип</th>
-            <th scope="col">Гарантия с</th>
-            <th scope="col">Гарантия по</th>
-            <th scope="col">Состояние</th>
-            <th scope="col">Цена</th>
-            <th scope="col">Приход</th>
+            <th scope="col">{ui.product}</th>
+            <th scope="col">{ui.type}</th>
+            <th scope="col">{ui.guaranteeStart}</th>
+            <th scope="col">{ui.guaranteeEnd}</th>
+            <th scope="col">{ui.condition}</th>
+            <th scope="col">{ui.price}</th>
+            <th scope="col">{ui.order}</th>
           </tr>
         </thead>
         <tbody>
@@ -56,18 +63,18 @@ export default function ProductsList({ products, orders, filtered }: ProductsLis
                   </div>
                 </div>
               </th>
-              <td>{product.type}</td>
+              <td>{productTypeLabel(product.type, locale)}</td>
               <td className="text-nowrap"><GuaranteeDate value={product.guarantee.start} /></td>
               <td className="text-nowrap"><GuaranteeDate value={product.guarantee.end} /></td>
-              <td className="text-nowrap">{product.isNew ? "Новый" : "Б/У"}</td>
+              <td className="text-nowrap">{product.isNew ? ui.new : ui.used}</td>
               <td className="text-nowrap">
-                {product.price.length === 0 ? "Цена не указана" : product.price.map((price) => (
+                {product.price.length === 0 ? ui.noPrice : product.price.map((price) => (
                   <div key={price.currency} className={price.isDefault ? "products-list__price" : "products-list__secondary"}>
-                    {formatMoney(price.amountMinor)} {price.currency}
+                    {formatMoney(price.amountMinor, locale)} {price.currency}
                   </div>
                 ))}
               </td>
-              <td className="products-list__order">{ordersById.get(product.orderId)?.title ?? "Приход не найден"}</td>
+              <td className="products-list__order">{ordersById.get(product.orderId)?.title ?? ui.missingOrder}</td>
             </tr>
           ))}
         </tbody>

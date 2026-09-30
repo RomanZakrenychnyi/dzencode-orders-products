@@ -1,20 +1,23 @@
 "use client";
 
+import { useLocale } from "@/i18n/LocaleProvider";
 import { useEffect, useState } from "react";
 
-const dayFormatter = new Intl.DateTimeFormat("ru-RU", { weekday: "long" });
-const dateFormatter = new Intl.DateTimeFormat("ru-RU", {
-  day: "2-digit",
-  month: "short",
-  year: "numeric",
-});
-const timeFormatter = new Intl.DateTimeFormat("ru-RU", {
-  hour: "2-digit",
-  minute: "2-digit",
-  hourCycle: "h23",
-});
-
 export default function HeaderClock() {
+  const { locale } = useLocale();
+  const dayFormatter = new Intl.DateTimeFormat(locale, { weekday: "long" });
+  const dateFormatter = new Intl.DateTimeFormat(locale, {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+  const timeFormatter = new Intl.DateTimeFormat(locale, {
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  });
+
+
   // Одинаковая заглушка на сервере и при первом рендере в браузере.
   const [now, setNow] = useState<Date | null>(null);
 

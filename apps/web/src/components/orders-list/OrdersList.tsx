@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/i18n/LocaleProvider";
+
 import { useRef, useState } from "react";
 import type { Order, Product } from "@/types/inventory";
 import OrderDetails from "./OrderDetails";
@@ -14,8 +16,9 @@ interface OrdersListProps {
 }
 
 export default function OrdersList({ orders, products, onDelete, onDeleted }: OrdersListProps) {
+  const { ui, locale } = useLocale();
   const [isDeleting, setIsDeleting] = useState(false);
-  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState(false);
   const deleteLock = useRef(false);
   const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
   const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
@@ -30,16 +33,16 @@ export default function OrdersList({ orders, products, onDelete, onDeleted }: Or
   }
 
   if (orders.length === 0) {
-    return <p className="orders-list__empty p-4">Приходов пока нет.</p>;
+    return <p className="orders-list__empty p-4">{ui.emptyOrders}</p>;
   }
 
   return (
     <>
     <div className={`orders-workspace${selectedOrder ? " orders-workspace--expanded" : ""}`}>
-    <ul className="orders-list list-unstyled d-flex flex-column gap-2 mb-0" aria-label="Список приходов">
+    <ul className="orders-list list-unstyled d-flex flex-column gap-2 mb-0" aria-label={ui.orderList}>
       {orders.map((order) => {
         const { productCount, totals } = getOrderSummary(order.id, products);
-        const date = formatOrderDate(order.date);
+        const date = formatOrderDate(order.date, locale);
 
         return (
           <li key={order.id} className={`orders-list__item position-relative${selectedOrderId === order.id ? " orders-list__item--selected" : ""}`}>
@@ -68,7 +71,7 @@ export default function OrdersList({ orders, products, onDelete, onDeleted }: Or
                 </span>
                 <div>
                   <span className="orders-list__count d-block">{productCount}</span>
-                  <span className="orders-list__muted">{productCountLabel(productCount)}</span>
+                  <span className="orders-list__muted">{productCountLabel(productCount, locale)}</span>
                 </div>
               </div>
               <div className={selectedOrder ? "col-6 text-end" : "col-6 col-md-4 col-xl-2 text-md-center"}>
@@ -78,12 +81,12 @@ export default function OrdersList({ orders, products, onDelete, onDeleted }: Or
                 </time>
               </div>
               {!selectedOrder && <div className="col-12 col-md-4 col-xl-3 text-md-end">
-                <div className="orders-list__muted orders-list__price-secondary">{formatMoney(totals.USD)} USD</div>
-                <div className="orders-list__price">{formatMoney(totals.UAH)} UAH</div>
+                <div className="orders-list__muted orders-list__price-secondary">{formatMoney(totals.USD, locale)} USD</div>
+                <div className="orders-list__price">{formatMoney(totals.UAH, locale)} UAH</div>
               </div>}
             </article>
-            <button type="button" className="orders-list__delete" aria-label={`Удалить приход «${order.title}»`}
-              onClick={(event) => { deleteTriggerRef.current = event.currentTarget; setDeleteError(null); setPendingDeleteId(order.id); }}>
+            <button type="button" className="orders-list__delete" aria-label={`${ui.deleteOrder} «${order.title}»`}
+              onClick={(event) => { deleteTriggerRef.current = event.currentTarget; setDeleteError(false); setPendingDeleteId(order.id); }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 10v7M14 10v7" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
@@ -109,20 +112,20 @@ export default function OrdersList({ orders, products, onDelete, onDeleted }: Or
       order={pendingOrder}
       productCount={products.filter((product) => product.orderId === pendingOrder.id).length}
       isDeleting={isDeleting}
-      error={deleteError}
+      error={deleteError ? ui.deleteError : null}
       onCancel={() => { setPendingDeleteId(null); deleteTriggerRef.current?.focus(); }}
       onConfirm={async () => {
         if (deleteLock.current) return;
         deleteLock.current = true;
         setIsDeleting(true);
-        setDeleteError(null);
+        setDeleteError(false);
         try {
           await onDelete(pendingOrder.id);
           if (selectedOrderId === pendingOrder.id) setSelectedOrderId(null);
           setPendingDeleteId(null);
           requestAnimationFrame(onDeleted);
         } catch {
-          setDeleteError("Не удалось подтвердить удаление. Проверьте соединение и попробуйте ещё раз.");
+          setDeleteError(true);
         } finally {
           deleteLock.current = false;
           setIsDeleting(false);
