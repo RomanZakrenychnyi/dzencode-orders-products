@@ -1,0 +1,46 @@
+# Изолированная локальная проверка: только тестовые данные и учётные записи.
+name: orders-render-check
+services:
+  app:
+    image: orders-products-render:local
+    mem_limit: 512m
+    environment:
+      PORT: 10000
+      CLIENT_ORIGIN: http://localhost:10000
+      COOKIE_SECURE: "false"
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: orders_products
+      DB_USER: orders_app
+      DB_PASSWORD: render_test_password
+      JWT_SECRET: render-test-only-secret-not-for-deployment-123456789
+      DEMO_EMAIL: demo@example.com
+      DEMO_PASSWORD: DemoPass123!
+    ports:
+      - "127.0.0.1:10000:10000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "Promise.all(['/login','/api/health/db'].map(p=>fetch('http://127.0.0.1:10000'+p))).then(rs=>process.exit(rs.every(r=>r.ok)?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: orders_products
+      MYSQL_USER: orders_app
+      MYSQL_PASSWORD: render_test_password
+      MYSQL_ROOT_PASSWORD: render_test_root_password
+    volumes:
+      - test_mysql:/var/lib/mysql
+      - ../../database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ../../database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=$$MYSQL_PASSWORD mysql -h 127.0.0.1 -u$$MYSQL_USER orders_products -e 'SELECT 1 FROM product_prices LIMIT 1' >/dev/null 2>&1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+volumes:
+  test_mysql:

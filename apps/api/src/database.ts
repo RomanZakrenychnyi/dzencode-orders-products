@@ -1,4 +1,5 @@
 import { createPool } from "mysql2/promise";
+import { readFileSync } from "node:fs";
 
 const port = Number(process.env.DB_PORT ?? 3307);
 if (!Number.isInteger(port) || port < 1 || port > 65535) {
@@ -9,6 +10,7 @@ if (!process.env.DB_PASSWORD) {
 }
 
 export const pool = createPool({
+  ...(process.env.DB_SSL_CA_PATH ? { ssl: { ca: readFileSync(process.env.DB_SSL_CA_PATH, "utf8"), rejectUnauthorized: true } } : {}),
   host: process.env.DB_HOST ?? "127.0.0.1",
   port,
   user: process.env.DB_USER ?? "orders_app",

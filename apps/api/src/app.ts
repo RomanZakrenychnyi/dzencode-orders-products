@@ -8,6 +8,8 @@ import { getOrders, getProducts } from "./inventory.js";
 import type { ResultSetHeader } from "mysql2";
 
 export const app = express();
+// Только общий контейнер: Render → nginx → Express. Локальный API не доверяет прокси.
+if (process.env.RENDER_COMBINED === "true") app.set("trust proxy", 2);
 
 app.disable("x-powered-by");
 app.use(cors({ origin: process.env.CLIENT_ORIGIN ?? "http://localhost:3000", credentials: true }));

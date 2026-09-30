@@ -11,7 +11,9 @@ export default function SessionCounter() {
   const [status, setStatus] = useState<"connecting" | "connected" | "offline">("connecting");
 
   useEffect(() => {
-    const socket = io(process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000", {
+    // API может находиться по /api на том же домене; Socket.io использует корневой namespace.
+    const origin = new URL(process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000", window.location.origin).origin;
+    const socket = io(origin, {
       autoConnect: false,
     });
 
