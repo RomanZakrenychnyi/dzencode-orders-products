@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/i18n/LocaleProvider";
+
 import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { useGetMeQuery } from "@/store/inventoryApi";
@@ -7,16 +9,17 @@ import TopMenu from "@/components/top-menu/TopMenu";
 import NavigationMenu from "@/components/navigation-menu/NavigationMenu";
 
 export default function AuthShell({ children }: { children: ReactNode }) {
+  const { ui } = useLocale();
   const pathname = usePathname();
-  const isLogin = pathname === "/login";
+  const isPublic = !["/", "/orders", "/products"].includes(pathname);
   const { data, isLoading, isError, refetch, isFetching } = useGetMeQuery(undefined, {
-    skip: isLogin, refetchOnMountOrArgChange: true, pollingInterval: 60000,
+    skip: isPublic, refetchOnMountOrArgChange: true, pollingInterval: 60000,
   });
-  if (isLogin) return children;
-  if (isLoading) return <main className="p-5" role="status">Проверка входа…</main>;
+  if (isPublic) return children;
+  if (isLoading) return <main className="p-5" role="status">{ui.checking}</main>;
   if (isError || !data) return (
-    <main className="p-5"><p role="alert">Не удалось проверить вход. Попробуйте ещё раз.</p>
-      <button className="btn btn-outline-secondary" disabled={isFetching} onClick={() => void refetch()}>Повторить</button>
+    <main className="p-5"><p role="alert">{ui.checkError}</p>
+      <button className="btn btn-outline-secondary" disabled={isFetching} onClick={() => void refetch()}>{ui.retry}</button>
     </main>
   );
   return <>

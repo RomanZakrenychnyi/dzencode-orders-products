@@ -1,22 +1,26 @@
+import { getServerLocale } from "@/i18n/server";
+import { interfaceMessages } from "@/i18n/interfaceMessages";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import AuthShell from "@/components/auth/AuthShell";
 import StoreProvider from "@/store/StoreProvider";
+import LocaleProvider from "@/i18n/LocaleProvider";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@/styles/globals.scss";
 
-export const metadata: Metadata = {
-  title: "Orders & Products",
-  description: "Приложение учёта приходов и товаров",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getServerLocale();
+  return { title: "Orders & Products", description: interfaceMessages[locale].description };
+}
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  const locale = await getServerLocale();
   return (
-    <html lang="ru">
+    <html lang={locale}>
       <body className="app-layout d-flex flex-column min-vh-100">
-        <StoreProvider>
+        <LocaleProvider initialLocale={locale}><StoreProvider>
         <AuthShell>{children}</AuthShell>
-        </StoreProvider>
+        </StoreProvider></LocaleProvider>
       </body>
     </html>
   );

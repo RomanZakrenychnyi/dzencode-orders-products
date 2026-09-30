@@ -1,23 +1,27 @@
 "use client";
 
+import { useLocale } from "@/i18n/LocaleProvider";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const menuItems = [
-  { label: "Приход", href: "/orders" },
-  { label: "Группы", href: null },
-  { label: "Продукты", href: "/products" },
-  { label: "Пользователи", href: null },
-  { label: "Настройки", href: null },
-];
-
 export default function NavigationMenu() {
+  const { ui } = useLocale();
   const pathname = usePathname();
+  const menuItems = [
+    { label: ui.order, href: "/orders" },
+    { label: ui.groups, href: null },
+    { label: ui.products, href: "/products" },
+    { label: ui.users, href: null },
+    { label: ui.settings, href: null },
+  ];
+
+
 
   return (
     <aside className="navigation-menu d-flex flex-column align-items-center">
       <div className="navigation-menu__profile">
-        <div className="navigation-menu__avatar" role="img" aria-label="Аватар пользователя">
+        <div className="navigation-menu__avatar" role="img" aria-label={ui.avatar}>
           <svg viewBox="0 0 96 96" fill="none" aria-hidden="true">
             <circle cx="48" cy="48" r="48" fill="#dce6e9" />
             <circle cx="48" cy="35" r="17" fill="#91a7af" />
@@ -32,7 +36,7 @@ export default function NavigationMenu() {
         </span>
       </div>
 
-      <nav className="navigation-menu__nav w-100" aria-label="Основная навигация">
+      <nav className="navigation-menu__nav w-100" aria-label={ui.navigation}>
         <ul className="nav flex-row flex-md-column justify-content-center align-items-center gap-3">
           {menuItems.map(({ label, href }) => (
             <li key={label} className="nav-item">

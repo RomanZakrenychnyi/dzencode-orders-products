@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/i18n/LocaleProvider";
+
 import { useEffect, useRef } from "react";
 import type { Order, Product } from "@/types/inventory";
 
@@ -10,6 +12,7 @@ interface OrderDetailsProps {
 }
 
 export default function OrderDetails({ order, products, onClose }: OrderDetailsProps) {
+  const { ui } = useLocale();
   const headingRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
@@ -25,7 +28,7 @@ export default function OrderDetails({ order, products, onClose }: OrderDetailsP
         if (event.key === "Escape") onClose();
       }}
     >
-      <button type="button" className="order-details__close" onClick={onClose} aria-label="Закрыть состав прихода">
+      <button type="button" className="order-details__close" onClick={onClose} aria-label={ui.closeDetails}>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="m6 6 12 12M18 6 6 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
         </svg>
@@ -36,9 +39,9 @@ export default function OrderDetails({ order, products, onClose }: OrderDetailsP
         </h2>
       </div>
       {products.length === 0 ? (
-        <p className="order-details__empty px-4 pb-4 mb-0">В этом приходе пока нет товаров.</p>
+        <p className="order-details__empty px-4 pb-4 mb-0">{ui.emptyDetails}</p>
       ) : (
-        <ul className="list-unstyled mb-0" aria-label="Товары выбранного прихода">
+        <ul className="list-unstyled mb-0" aria-label={ui.selectedProducts}>
           {products.map((product) => (
             <li key={product.id} className="order-details__product d-flex align-items-center gap-3 px-4 py-3">
               <span className="order-details__product-icon" aria-hidden="true">
@@ -51,7 +54,7 @@ export default function OrderDetails({ order, products, onClose }: OrderDetailsP
                 <h3 className="order-details__product-title mb-1">{product.title}</h3>
                 <p className="order-details__serial mb-0">SN-{product.serialNumber}</p>
               </div>
-              <span className="order-details__condition">{product.isNew ? "Новый" : "Б/У"}</span>
+              <span className="order-details__condition">{product.isNew ? ui.new : ui.used}</span>
             </li>
           ))}
         </ul>
