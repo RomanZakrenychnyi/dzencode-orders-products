@@ -5,7 +5,7 @@ import { useLocale } from "@/i18n/LocaleProvider";
 import { useRef, useState } from "react";
 import type { Order, Product } from "@/types/inventory";
 import OrderDetails from "./OrderDetails";
-import DeleteOrderDialog from "./DeleteOrderDialog";
+import LazyDeleteOrderDialog from "./LazyDeleteOrderDialog";
 import { formatMoney, formatOrderDate, getOrderSummary, productCountLabel } from "@/lib/orders";
 
 interface OrdersListProps {
@@ -108,7 +108,7 @@ export default function OrdersList({ orders, products, onDelete, onDeleted }: Or
     </div>
     </div>
     </div>
-    {pendingOrder && <DeleteOrderDialog
+    {pendingOrder && <LazyDeleteOrderDialog
       order={pendingOrder}
       productCount={products.filter((product) => product.orderId === pendingOrder.id).length}
       isDeleting={isDeleting}
