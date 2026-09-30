@@ -12,7 +12,7 @@ if (!Number.isInteger(port) || port < 1 || port > 65535) {
 const server = createServer(app);
 const io = attachRealtime(server);
 
-server.listen(port, () => {
+server.listen(port, process.env.API_HOST ?? "0.0.0.0", () => {
   console.log(`API запущен: http://localhost:${port}`);
 });
 
