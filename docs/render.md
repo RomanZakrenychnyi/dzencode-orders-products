@@ -1,5 +1,7 @@
 # Размещение на Render и Aiven
 
+Приложение опубликовано: https://dzencode-orders-products.onrender.com. Render отслеживает ветку main; публичный запуск и основные сценарии подтверждены 01.10.2026.
+
 `deploy/render/Dockerfile` запускает nginx, Next.js standalone и Express в одном контейнере. Страницы доступны на `/`, REST API — на `/api/`, Socket.io — на `/socket.io/`. SSR обращается к Express внутри контейнера. Cookie остаётся HttpOnly, SameSite=Lax и Secure при HTTPS.
 
 MySQL размещается в Aiven: бесплатный Render не предоставляет постоянный диск для базы. Обычный локальный `compose.yaml` остаётся прежним.
@@ -88,4 +90,4 @@ docker compose -f deploy/render/compose.test.yaml down
 ```
 
 Тестовый том сохраняется; рабочие контейнеры и данные не затрагиваются.
-Публичный деплой и TLS-подключение к Aiven проверяются отдельно после создания аккаунтов и задания секретов.
+При повторном развёртывании проверьте публичный адрес и TLS-подключение к своей базе Aiven по списку выше.
